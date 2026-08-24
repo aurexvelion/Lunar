@@ -1,11 +1,13 @@
 package com.lunar.genshin;
-import android.Manifest;import android.app.*;import android.content.pm.PackageManager;import android.graphics.Color;import android.os.Bundle;import android.view.WindowInsets;import android.webkit.*;
+import android.Manifest;import android.app.*;import android.content.pm.PackageManager;import android.graphics.Color;import android.os.Bundle;import android.view.*;import android.webkit.*;
 public class MainActivity extends Activity {
- private WebView w;
+ private WebView w; private GestureDetector gestures;
  @Override public void onCreate(Bundle b){super.onCreate(b);getWindow().setStatusBarColor(Color.rgb(9,10,15));getWindow().setNavigationBarColor(Color.rgb(9,10,15));
   NotificationManager n=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);n.createNotificationChannel(new NotificationChannel(ReminderReceiver.CHANNEL,"Genshin dailies",NotificationManager.IMPORTANCE_DEFAULT));
   w=new WebView(this);WebSettings s=w.getSettings();s.setJavaScriptEnabled(true);s.setDomStorageEnabled(true);w.setBackgroundColor(Color.rgb(9,10,15));w.setWebViewClient(new WebViewClient());w.addJavascriptInterface(new Bridge(),"LunarAndroid");
-  w.setOnApplyWindowInsetsListener((v,insets)->{int bottom=insets.getInsets(WindowInsets.Type.navigationBars()).bottom;v.setPadding(0,0,0,bottom);return insets;});
+  gestures=new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){@Override public boolean onDown(MotionEvent e){return true;}@Override public boolean onFling(MotionEvent e1,MotionEvent e2,float vx,float vy){if(e1==null||e2==null)return false;float dx=e2.getX()-e1.getX(),dy=e2.getY()-e1.getY();if(Math.abs(dx)<120||Math.abs(dx)<Math.abs(dy)*1.3f)return false;swipe(dx<0?1:-1);return true;}});
+  w.setOnTouchListener((v,e)->{gestures.onTouchEvent(e);return false;});
   setContentView(w);w.loadUrl("file:///android_asset/index.html");}
+ private void swipe(int dir){String js="(()=>{const ids=['today','wishes','weekly','stash'];const pages=[...document.querySelectorAll('.page')];const cur=pages.findIndex(p=>p.classList.contains('on'));let n=Math.max(0,Math.min(ids.length-1,cur+"+dir+"));if(n===cur)return;document.querySelectorAll('.page,.tabs button').forEach(x=>x.classList.remove('on'));document.getElementById(ids[n]).classList.add('on');const b=document.querySelector('.tabs button[data-p=\"'+ids[n]+'\"]');if(b)b.classList.add('on');window.scrollTo({top:0,behavior:'smooth'});})()";w.post(()->w.evaluateJavascript(js,null));}
  public class Bridge {@JavascriptInterface public String getReminder(){return "{\"enabled\":"+ReminderScheduler.isEnabled(MainActivity.this)+",\"hour\":"+ReminderScheduler.getHour(MainActivity.this)+",\"minute\":"+ReminderScheduler.getMinute(MainActivity.this)+"}";} @JavascriptInterface public void setReminder(boolean e,int h,int m){ReminderScheduler.saveAndSchedule(MainActivity.this,e,h,m);if(e&&checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED)runOnUiThread(()->requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},4401));}}
 }
