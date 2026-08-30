@@ -26,7 +26,12 @@ public class MainActivity extends Activity {
         w.setWebViewClient(new WebViewClient() {
             @Override public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                view.evaluateJavascript("(()=>{if(document.getElementById('lunar-weekly-module'))return;const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';document.body.appendChild(x)})()", null);
+                view.evaluateJavascript(
+                    "(()=>{" +
+                    "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module'))return;const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';document.body.appendChild(e)};" +
+                    "if(document.getElementById('lunar-weekly-module')){addEnh();return;}" +
+                    "const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';x.onload=addEnh;document.body.appendChild(x);" +
+                    "})()", null);
             }
         });
         w.addJavascriptInterface(new Bridge(), "LunarAndroid");
