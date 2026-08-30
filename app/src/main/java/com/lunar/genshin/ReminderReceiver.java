@@ -15,8 +15,9 @@ public class ReminderReceiver extends BroadcastReceiver {
         String type = i.getStringExtra("type");
         boolean weekly = "weekly".equals(type);
         boolean farm = "farm".equals(type);
+        boolean resin = "resin".equals(type);
         Intent open = new Intent(c, MainActivity.class);
-        int requestCode = weekly ? 1 : (farm ? 2 : 0);
+        int requestCode = weekly ? 1 : (farm ? 2 : (resin ? 3 : 0));
         PendingIntent p = PendingIntent.getActivity(c, requestCode, open, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         String title;
@@ -37,6 +38,14 @@ public class ReminderReceiver extends BroadcastReceiver {
                     ? days[day]
                     : "Open L.U.N.A.R. to check today's America-server farm plan.";
             notifyId = 4109;
+        } else if (resin) {
+            int lead = ReminderScheduler.getResinLead(c);
+            title = "L.U.N.A.R. • Resin almost capped";
+            text = lead > 0
+                    ? "About " + lead + " minutes until 200 Original Resin. Spend some before regeneration stops."
+                    : "Original Resin is reaching 200. Spend some before regeneration stops.";
+            notifyId = 4110;
+            c.getSharedPreferences(ReminderScheduler.P,0).edit().putBoolean("re",false).apply();
         } else {
             title = "L.U.N.A.R. • Dailies";
             text = "Welkin, commissions and today’s resin plan.";
