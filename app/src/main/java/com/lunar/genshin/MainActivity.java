@@ -2,6 +2,7 @@ package com.lunar.genshin;
 
 import android.Manifest;
 import android.app.*;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,7 +29,8 @@ public class MainActivity extends Activity {
                 super.onPageFinished(view, url);
                 view.evaluateJavascript(
                     "(()=>{" +
-                    "const addUx=()=>{if(document.getElementById('lunar-uxfix-module'))return;const u=document.createElement('script');u.id='lunar-uxfix-module';u.src='file:///android_asset/uxfix.js';document.body.appendChild(u)};" +
+                    "const addSmart=()=>{if(document.getElementById('lunar-smart-last-module'))return;const q=document.createElement('script');q.id='lunar-smart-last-module';q.src='file:///android_asset/smart_last.js';document.body.appendChild(q)};" +
+                    "const addUx=()=>{if(document.getElementById('lunar-uxfix-module')){addSmart();return;}const u=document.createElement('script');u.id='lunar-uxfix-module';u.src='file:///android_asset/uxfix.js';u.onload=addSmart;document.body.appendChild(u)};" +
                     "const addRules=()=>{if(document.getElementById('lunar-rules-module')){addUx();return;}const r=document.createElement('script');r.id='lunar-rules-module';r.src='file:///android_asset/rules.js';r.onload=addUx;document.body.appendChild(r)};" +
                     "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module')){addRules();return;}const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';e.onload=addRules;document.body.appendChild(e)};" +
                     "const addWeekly=()=>{if(document.getElementById('lunar-weekly-module')){addEnh();return;}const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';x.onload=addEnh;document.body.appendChild(x)};" +
@@ -70,6 +72,29 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void setWeeklyReminder(boolean enabled, int day, int hour, int minute) {
             ReminderScheduler.saveAndScheduleWeekly(MainActivity.this, enabled, day, hour, minute);
             if (enabled) requestNotificationPermission();
+        }
+
+        @JavascriptInterface public String getFarmReminder() {
+            return "{\"enabled\":" + ReminderScheduler.isFarmEnabled(MainActivity.this)
+                    + ",\"hour\":" + ReminderScheduler.getFarmHour(MainActivity.this)
+                    + ",\"minute\":" + ReminderScheduler.getFarmMinute(MainActivity.this) + "}";
+        }
+
+        @JavascriptInterface public void setFarmReminder(boolean enabled, int hour, int minute, String plan) {
+            ReminderScheduler.saveAndScheduleFarm(MainActivity.this, enabled, hour, minute, plan);
+            if (enabled) requestNotificationPermission();
+        }
+
+        @JavascriptInterface public void copyText(String text) {
+            ClipboardManager cb = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            cb.setPrimaryClip(ClipData.newPlainText("L.U.N.A.R. backup", text == null ? "" : text));
+        }
+
+        @JavascriptInterface public String getClipboard() {
+            ClipboardManager cb = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            if (!cb.hasPrimaryClip() || cb.getPrimaryClip() == null || cb.getPrimaryClip().getItemCount() == 0) return "";
+            CharSequence t = cb.getPrimaryClip().getItemAt(0).coerceToText(MainActivity.this);
+            return t == null ? "" : t.toString();
         }
     }
 }
