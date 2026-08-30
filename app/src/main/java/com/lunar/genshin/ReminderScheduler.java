@@ -1,3 +1,64 @@
 package com.lunar.genshin;
-import android.app.*;import android.content.*;import java.util.Calendar;
-public final class ReminderScheduler {static final String P="lunar_native";static PendingIntent pi(Context c){return PendingIntent.getBroadcast(c,4107,new Intent(c,ReminderReceiver.class),PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);}public static void saveAndSchedule(Context c,boolean e,int h,int m){c.getSharedPreferences(P,0).edit().putBoolean("e",e).putInt("h",h).putInt("m",m).apply();AlarmManager a=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);a.cancel(pi(c));if(e){Calendar x=Calendar.getInstance();x.set(Calendar.HOUR_OF_DAY,h);x.set(Calendar.MINUTE,m);x.set(Calendar.SECOND,0);if(x.getTimeInMillis()<=System.currentTimeMillis())x.add(Calendar.DAY_OF_YEAR,1);a.setInexactRepeating(AlarmManager.RTC_WAKEUP,x.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pi(c));}}public static void restore(Context c){if(isEnabled(c))saveAndSchedule(c,true,getHour(c),getMinute(c));}public static boolean isEnabled(Context c){return c.getSharedPreferences(P,0).getBoolean("e",false);}public static int getHour(Context c){return c.getSharedPreferences(P,0).getInt("h",20);}public static int getMinute(Context c){return c.getSharedPreferences(P,0).getInt("m",0);}}
+
+import android.app.*;
+import android.content.*;
+import java.util.Calendar;
+
+public final class ReminderScheduler {
+    static final String P = "lunar_native";
+
+    static PendingIntent dailyPi(Context c) {
+        Intent i = new Intent(c, ReminderReceiver.class).putExtra("type", "daily");
+        return PendingIntent.getBroadcast(c, 4107, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    static PendingIntent weeklyPi(Context c) {
+        Intent i = new Intent(c, ReminderReceiver.class).putExtra("type", "weekly");
+        return PendingIntent.getBroadcast(c, 4108, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    public static void saveAndSchedule(Context c, boolean enabled, int hour, int minute) {
+        c.getSharedPreferences(P, 0).edit().putBoolean("e", enabled).putInt("h", hour).putInt("m", minute).apply();
+        AlarmManager a = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        a.cancel(dailyPi(c));
+        if (enabled) {
+            Calendar x = Calendar.getInstance();
+            x.set(Calendar.HOUR_OF_DAY, hour);
+            x.set(Calendar.MINUTE, minute);
+            x.set(Calendar.SECOND, 0);
+            x.set(Calendar.MILLISECOND, 0);
+            if (x.getTimeInMillis() <= System.currentTimeMillis()) x.add(Calendar.DAY_OF_YEAR, 1);
+            a.setInexactRepeating(AlarmManager.RTC_WAKEUP, x.getTimeInMillis(), AlarmManager.INTERVAL_DAY, dailyPi(c));
+        }
+    }
+
+    public static void saveAndScheduleWeekly(Context c, boolean enabled, int day, int hour, int minute) {
+        day = Math.max(0, Math.min(6, day));
+        c.getSharedPreferences(P, 0).edit().putBoolean("we", enabled).putInt("wd", day).putInt("wh", hour).putInt("wm", minute).apply();
+        AlarmManager a = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        a.cancel(weeklyPi(c));
+        if (enabled) {
+            Calendar x = Calendar.getInstance();
+            x.set(Calendar.DAY_OF_WEEK, day + 1);
+            x.set(Calendar.HOUR_OF_DAY, hour);
+            x.set(Calendar.MINUTE, minute);
+            x.set(Calendar.SECOND, 0);
+            x.set(Calendar.MILLISECOND, 0);
+            if (x.getTimeInMillis() <= System.currentTimeMillis()) x.add(Calendar.WEEK_OF_YEAR, 1);
+            a.setInexactRepeating(AlarmManager.RTC_WAKEUP, x.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, weeklyPi(c));
+        }
+    }
+
+    public static void restore(Context c) {
+        if (isEnabled(c)) saveAndSchedule(c, true, getHour(c), getMinute(c));
+        if (isWeeklyEnabled(c)) saveAndScheduleWeekly(c, true, getWeeklyDay(c), getWeeklyHour(c), getWeeklyMinute(c));
+    }
+
+    public static boolean isEnabled(Context c) { return c.getSharedPreferences(P, 0).getBoolean("e", false); }
+    public static int getHour(Context c) { return c.getSharedPreferences(P, 0).getInt("h", 20); }
+    public static int getMinute(Context c) { return c.getSharedPreferences(P, 0).getInt("m", 0); }
+    public static boolean isWeeklyEnabled(Context c) { return c.getSharedPreferences(P, 0).getBoolean("we", false); }
+    public static int getWeeklyDay(Context c) { return c.getSharedPreferences(P, 0).getInt("wd", 1); }
+    public static int getWeeklyHour(Context c) { return c.getSharedPreferences(P, 0).getInt("wh", 18); }
+    public static int getWeeklyMinute(Context c) { return c.getSharedPreferences(P, 0).getInt("wm", 0); }
+}
