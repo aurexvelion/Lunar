@@ -22,6 +22,11 @@ public final class ReminderScheduler {
         return PendingIntent.getBroadcast(c, 4109, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
+    static PendingIntent resinPi(Context c) {
+        Intent i = new Intent(c, ReminderReceiver.class).putExtra("type", "resin");
+        return PendingIntent.getBroadcast(c, 4110, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
     public static void saveAndSchedule(Context c, boolean enabled, int hour, int minute) {
         c.getSharedPreferences(P, 0).edit().putBoolean("e", enabled).putInt("h", hour).putInt("m", minute).apply();
         AlarmManager a = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
@@ -59,10 +64,28 @@ public final class ReminderScheduler {
         }
     }
 
+    public static void saveAndScheduleResin(Context c, boolean enabled, long delayMillis, int currentResin, int leadMinutes) {
+        AlarmManager a = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        a.cancel(resinPi(c));
+        long triggerAt = enabled ? System.currentTimeMillis() + Math.max(1000L, delayMillis) : 0L;
+        c.getSharedPreferences(P, 0).edit()
+                .putBoolean("re", enabled)
+                .putLong("rt", triggerAt)
+                .putInt("rr", Math.max(0, Math.min(200, currentResin)))
+                .putInt("rl", Math.max(0, Math.min(1440, leadMinutes)))
+                .apply();
+        if (enabled) a.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, resinPi(c));
+    }
+
     public static void restore(Context c) {
         if (isEnabled(c)) saveAndSchedule(c, true, getHour(c), getMinute(c));
         if (isWeeklyEnabled(c)) saveAndScheduleWeekly(c, true, getWeeklyDay(c), getWeeklyHour(c), getWeeklyMinute(c));
         if (isFarmEnabled(c)) saveAndScheduleFarm(c, true, getFarmHour(c), getFarmMinute(c), getFarmPlan(c));
+        if (isResinEnabled(c)) {
+            long left = getResinTrigger(c) - System.currentTimeMillis();
+            if (left > 1000L) saveAndScheduleResin(c, true, left, getResinCurrent(c), getResinLead(c));
+            else c.getSharedPreferences(P,0).edit().putBoolean("re",false).apply();
+        }
     }
 
     public static boolean isEnabled(Context c) { return c.getSharedPreferences(P, 0).getBoolean("e", false); }
@@ -76,4 +99,8 @@ public final class ReminderScheduler {
     public static int getFarmHour(Context c) { return c.getSharedPreferences(P, 0).getInt("fh", 18); }
     public static int getFarmMinute(Context c) { return c.getSharedPreferences(P, 0).getInt("fm", 0); }
     public static String getFarmPlan(Context c) { return c.getSharedPreferences(P, 0).getString("fp", ""); }
+    public static boolean isResinEnabled(Context c) { return c.getSharedPreferences(P, 0).getBoolean("re", false); }
+    public static long getResinTrigger(Context c) { return c.getSharedPreferences(P, 0).getLong("rt", 0L); }
+    public static int getResinCurrent(Context c) { return c.getSharedPreferences(P, 0).getInt("rr", 0); }
+    public static int getResinLead(Context c) { return c.getSharedPreferences(P, 0).getInt("rl", 60); }
 }
