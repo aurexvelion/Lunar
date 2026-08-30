@@ -10,9 +10,7 @@
   `;
   document.head.appendChild(style);
 
-  function activePage() {
-    return document.querySelector('.page.on');
-  }
+  function activePage() { return document.querySelector('.page.on'); }
 
   function safeRender() {
     const page = activePage();
@@ -31,9 +29,6 @@
     });
   }
 
-  // Character sub-tabs used to call renderChar() directly. That rebuilt the character page
-  // but skipped the later decorators, which made cards such as fixed total targets disappear.
-  // Handle these clicks once, at the document level, and do a complete render instead.
   document.addEventListener('click', e => {
     const b = e.target.closest && e.target.closest('[data-char-tab]');
     if (!b) return;
@@ -60,17 +55,16 @@
       const id = b.dataset.mat;
       if (typeof mats === 'undefined' || !mats[id]) return false;
       if (!s.materials) s.materials = {};
-      const max = Math.max(0, Number(mats[id].need || 0));
-      s.materials[id] = Math.max(0, Math.min(max, Number(s.materials[id] || 0) + d));
+      const target = Math.max(0, Number(mats[id].need || 0));
+      s.materials[id] = Math.max(0, Math.min(999999999, Number(s.materials[id] || 0) + d));
       const label = b.closest('.stepper')?.querySelector('b');
-      if (label) label.textContent = `${Number(s.materials[id]).toLocaleString()} / ${max.toLocaleString()}`;
+      if (label) label.textContent = `${Number(s.materials[id]).toLocaleString()} / ${target.toLocaleString()}`;
       return true;
     }
 
     if (b.dataset.shared) {
       const key = b.dataset.shared;
       if (!s.inventory) s.inventory = {};
-      // Shared inventory is an owned stash, so do not artificially clamp it to one character.
       s.inventory[key] = Math.max(0, Math.min(999999999, Number(s.inventory[key] || 0) + d));
       const label = b.closest('.stepper')?.querySelector('b');
       if (label) label.textContent = Number(s.inventory[key]).toLocaleString();
@@ -122,8 +116,6 @@
   document.addEventListener('pointerup', e => stopHold(e.pointerId), true);
   document.addEventListener('pointercancel', e => stopHold(e.pointerId), true);
 
-  // A long press normally emits a final click on release. Swallow that click so the value
-  // does not jump by one extra step after auto-repeat finishes.
   document.addEventListener('click', e => {
     const b = amountButton(e.target);
     if (!b || b !== suppressClickFor) return;
