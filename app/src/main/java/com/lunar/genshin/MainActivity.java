@@ -30,8 +30,9 @@ public class MainActivity extends Activity {
                     "(()=>{" +
                     "const addRules=()=>{if(document.getElementById('lunar-rules-module'))return;const r=document.createElement('script');r.id='lunar-rules-module';r.src='file:///android_asset/rules.js';document.body.appendChild(r)};" +
                     "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module')){addRules();return;}const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';e.onload=addRules;document.body.appendChild(e)};" +
-                    "if(document.getElementById('lunar-weekly-module')){addEnh();return;}" +
-                    "const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';x.onload=addEnh;document.body.appendChild(x);" +
+                    "const addWeekly=()=>{if(document.getElementById('lunar-weekly-module')){addEnh();return;}const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';x.onload=addEnh;document.body.appendChild(x)};" +
+                    "if(document.getElementById('lunar-full-materials-module')){addWeekly();return;}" +
+                    "const m=document.createElement('script');m.id='lunar-full-materials-module';m.src='file:///android_asset/materials_full.js';m.onload=addWeekly;document.body.appendChild(m);" +
                     "})()", null);
             }
         });
