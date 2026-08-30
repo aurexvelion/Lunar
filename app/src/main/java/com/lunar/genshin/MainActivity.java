@@ -23,7 +23,12 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         w.setBackgroundColor(Color.rgb(9, 11, 18));
-        w.setWebViewClient(new WebViewClient());
+        w.setWebViewClient(new WebViewClient() {
+            @Override public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.evaluateJavascript("(()=>{if(document.getElementById('lunar-weekly-module'))return;const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';document.body.appendChild(x)})()", null);
+            }
+        });
         w.addJavascriptInterface(new Bridge(), "LunarAndroid");
         setContentView(w);
         w.loadUrl("file:///android_asset/index.html");
