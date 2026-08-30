@@ -29,7 +29,8 @@ public class MainActivity extends Activity {
                 super.onPageFinished(view, url);
                 view.evaluateJavascript(
                     "(()=>{" +
-                    "const addSmart=()=>{if(document.getElementById('lunar-smart-last-module'))return;const q=document.createElement('script');q.id='lunar-smart-last-module';q.src='file:///android_asset/smart_last.js';document.body.appendChild(q)};" +
+                    "const addMore=()=>{if(document.getElementById('lunar-smart-more-module'))return;const z=document.createElement('script');z.id='lunar-smart-more-module';z.src='file:///android_asset/smart_more.js';document.body.appendChild(z)};" +
+                    "const addSmart=()=>{if(document.getElementById('lunar-smart-last-module')){addMore();return;}const q=document.createElement('script');q.id='lunar-smart-last-module';q.src='file:///android_asset/smart_last.js';q.onload=addMore;document.body.appendChild(q)};" +
                     "const addUx=()=>{if(document.getElementById('lunar-uxfix-module')){addSmart();return;}const u=document.createElement('script');u.id='lunar-uxfix-module';u.src='file:///android_asset/uxfix.js';u.onload=addSmart;document.body.appendChild(u)};" +
                     "const addRules=()=>{if(document.getElementById('lunar-rules-module')){addUx();return;}const r=document.createElement('script');r.id='lunar-rules-module';r.src='file:///android_asset/rules.js';r.onload=addUx;document.body.appendChild(r)};" +
                     "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module')){addRules();return;}const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';e.onload=addRules;document.body.appendChild(e)};" +
@@ -82,6 +83,11 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface public void setFarmReminder(boolean enabled, int hour, int minute, String plan) {
             ReminderScheduler.saveAndScheduleFarm(MainActivity.this, enabled, hour, minute, plan);
+            if (enabled) requestNotificationPermission();
+        }
+
+        @JavascriptInterface public void setResinAlarm(boolean enabled, long delayMillis, int currentResin, int leadMinutes) {
+            ReminderScheduler.saveAndScheduleResin(MainActivity.this, enabled, delayMillis, currentResin, leadMinutes);
             if (enabled) requestNotificationPermission();
         }
 
