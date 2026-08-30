@@ -28,7 +28,8 @@ public class MainActivity extends Activity {
                 super.onPageFinished(view, url);
                 view.evaluateJavascript(
                     "(()=>{" +
-                    "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module'))return;const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';document.body.appendChild(e)};" +
+                    "const addRules=()=>{if(document.getElementById('lunar-rules-module'))return;const r=document.createElement('script');r.id='lunar-rules-module';r.src='file:///android_asset/rules.js';document.body.appendChild(r)};" +
+                    "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module')){addRules();return;}const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';e.onload=addRules;document.body.appendChild(e)};" +
                     "if(document.getElementById('lunar-weekly-module')){addEnh();return;}" +
                     "const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';x.onload=addEnh;document.body.appendChild(x);" +
                     "})()", null);
