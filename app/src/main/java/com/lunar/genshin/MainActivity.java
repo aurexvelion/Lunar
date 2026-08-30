@@ -28,7 +28,8 @@ public class MainActivity extends Activity {
                 super.onPageFinished(view, url);
                 view.evaluateJavascript(
                     "(()=>{" +
-                    "const addRules=()=>{if(document.getElementById('lunar-rules-module'))return;const r=document.createElement('script');r.id='lunar-rules-module';r.src='file:///android_asset/rules.js';document.body.appendChild(r)};" +
+                    "const addUx=()=>{if(document.getElementById('lunar-uxfix-module'))return;const u=document.createElement('script');u.id='lunar-uxfix-module';u.src='file:///android_asset/uxfix.js';document.body.appendChild(u)};" +
+                    "const addRules=()=>{if(document.getElementById('lunar-rules-module')){addUx();return;}const r=document.createElement('script');r.id='lunar-rules-module';r.src='file:///android_asset/rules.js';r.onload=addUx;document.body.appendChild(r)};" +
                     "const addEnh=()=>{if(document.getElementById('lunar-enhancements-module')){addRules();return;}const e=document.createElement('script');e.id='lunar-enhancements-module';e.src='file:///android_asset/enhancements.js';e.onload=addRules;document.body.appendChild(e)};" +
                     "const addWeekly=()=>{if(document.getElementById('lunar-weekly-module')){addEnh();return;}const x=document.createElement('script');x.id='lunar-weekly-module';x.src='file:///android_asset/weekly.js';x.onload=addEnh;document.body.appendChild(x)};" +
                     "if(document.getElementById('lunar-full-materials-module')){addWeekly();return;}" +
