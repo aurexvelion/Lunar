@@ -1,155 +1,99 @@
-(() => {
-  if (window.__lunarFullMaterialsLoaded) return;
-  window.__lunarFullMaterialsLoaded = true;
-  if (typeof mats === 'undefined' || typeof chars === 'undefined' || typeof s === 'undefined') return;
+const KEY='lunar_iii_v1';
+const DAY=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const SHORT=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
-  const put = (id, data) => { mats[id] = Object.assign({}, mats[id] || {}, data); if (s.materials[id] == null) s.materials[id] = 0; };
-  const setGroups = (id, character, talents, weapon) => { chars[id].groups = {character, talents, weapon}; };
+const RESIN_GOALS=[
+  {id:'homa',owner:'Hu Tao',title:'Staff of Homa ascension',kind:'domain',cost:20,days:[3,6,0],source:'Hidden Palace of Lianshan Formula',remaining:'Piece of Aerosiderite ×10 · Bit ×14 · Chunk ×6',priority:94},
 
-  // HU TAO • Lv.1→90 + 10/10/10 + Staff of Homa Lv.1→90
-  put('hutao_wit',{name:"Hero's Wit equivalent",need:419,owner:'hutao',group:'character',source:'Character EXP'});
-  put('hutao_mora',{name:'Mora',need:7049500,step:100000,owner:'hutao',group:'character',source:'Lv.90 + 10/10/10 talents'});
-  put('hutao_silk',{name:'Silk Flower',need:168,owner:'hutao',group:'character',source:'Liyue local specialty'});
-  put('hutao_jade',{name:'Juvenile Jade',need:46,owner:'hutao',group:'character',source:'Primo Geovishap'});
-  put('hutao_agate1',{name:'Agnidus Agate Sliver',need:1,owner:'hutao',group:'character',source:'Pyro bosses'});
-  put('hutao_agate2',{name:'Agnidus Agate Fragment',need:9,owner:'hutao',group:'character',source:'Pyro bosses'});
-  put('hutao_agate3',{name:'Agnidus Agate Chunk',need:9,owner:'hutao',group:'character',source:'Pyro bosses'});
-  put('hutao_agate4',{name:'Agnidus Agate Gemstone',need:6,owner:'hutao',group:'character',source:'Pyro bosses'});
-  put('hutao_nectar1',{name:'Whopperflower Nectar',need:36,owner:'hutao',group:'character',source:'Whopperflowers • ascension + talents'});
-  put('hutao_nectar2',{name:'Shimmering Nectar',need:96,owner:'hutao',group:'character',source:'Whopperflowers • ascension + talents'});
-  put('hutao_nectar3',{name:'Energy Nectar',need:129,owner:'hutao',group:'character',source:'Whopperflowers • ascension + talents'});
-  put('hutao_diligence1',{name:'Teachings of Diligence',need:9,owner:'hutao',group:'talents',source:'Taishan Mansion',days:[2,5,0],domain:true});
-  put('hutao_diligence2',{name:'Guide to Diligence',need:63,owner:'hutao',group:'talents',source:'Taishan Mansion',days:[2,5,0],domain:true});
-  put('hutao_diligence3',{name:'Philosophies of Diligence',need:114,owner:'hutao',group:'talents',source:'Taishan Mansion',days:[2,5,0],domain:true});
-  put('hutao_weekly',{name:'Shard of a Foul Legacy',need:18,owner:'hutao',group:'talents',source:'Childe • weekly boss'});
-  put('hutao_crown',{name:'Crown of Insight',need:3,owner:'hutao',group:'talents',source:'10/10/10 talents'});
-  put('homa_mora',{name:'Weapon Mora',need:1132000,step:100000,owner:'hutao',group:'weapon',source:'Staff of Homa Lv.1→90'});
-  put('homa_ore',{name:'Mystic Enhancement Ore',need:907,owner:'hutao',group:'weapon',source:'Staff of Homa Lv.1→90'});
-  put('homa_grain',{name:'Grain of Aerosiderite',need:5,owner:'hutao',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[3,6,0],domain:true});
-  put('homa_piece',{name:'Piece of Aerosiderite',need:14,owner:'hutao',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[3,6,0],domain:true});
-  put('homa_bit',{name:'Bit of Aerosiderite',need:14,owner:'hutao',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[3,6,0],domain:true});
-  put('homa_chunk',{name:'Chunk of Aerosiderite',need:6,owner:'hutao',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[3,6,0],domain:true});
-  put('homa_ley1',{name:'Dead Ley Line Branch',need:23,owner:'hutao',group:'weapon',source:'Abyss Mages / Lectors / Heralds'});
-  put('homa_ley2',{name:'Dead Ley Line Leaves',need:27,owner:'hutao',group:'weapon',source:'Abyss Mages / Lectors / Heralds'});
-  put('homa_ley3',{name:'Ley Line Sprout',need:41,owner:'hutao',group:'weapon',source:'Abyss Mages / Lectors / Heralds'});
-  put('homa_slime1',{name:'Slime Condensate',need:15,owner:'hutao',group:'weapon',source:'Slimes'});
-  put('homa_slime2',{name:'Slime Secretions',need:23,owner:'hutao',group:'weapon',source:'Slimes'});
-  put('homa_slime3',{name:'Slime Concentrate',need:27,owner:'hutao',group:'weapon',source:'Slimes'});
-  setGroups('hutao',
-    ['hutao_wit','hutao_mora','hutao_silk','hutao_jade','hutao_agate1','hutao_agate2','hutao_agate3','hutao_agate4','hutao_nectar1','hutao_nectar2','hutao_nectar3'],
-    ['hutao_diligence1','hutao_diligence2','hutao_diligence3','hutao_weekly','hutao_crown'],
-    ['homa_mora','homa_ore','homa_grain','homa_piece','homa_bit','homa_chunk','homa_ley1','homa_ley2','homa_ley3','homa_slime1','homa_slime2','homa_slime3']
-  );
+  {id:'yelan_weekly',owner:'Yelan',title:'Azhdaha weekly drop',kind:'weekly',cost:30,source:'Azhdaha',remaining:'Gilded Scale ×9',priority:100},
+  {id:'yelan_talent',owner:'Yelan',title:'Prosperity talent books',kind:'domain',cost:20,days:[1,4,0],source:'Taishan Mansion',remaining:'Teachings ×2 · Philosophies ×56',priority:95},
+  {id:'yelan_boss',owner:'Yelan',title:'Ruin Serpent',kind:'boss',cost:40,source:'Ruin Serpent',remaining:'Runic Fang ×22 · Varunada Lazurite Gemstone ×4',priority:82},
+  {id:'aqua',owner:'Yelan',title:'Aqua Simulacra ascension',kind:'domain',cost:20,days:[1,4,0],source:'Hidden Palace of Lianshan Formula',remaining:'Luminous Sands from Guyun ×3 · Lustrous Stone ×4',priority:94},
 
-  // YELAN • Lv.1→90 + 10/10/10 + Aqua Simulacra Lv.1→90
-  put('yelan_wit',{name:"Hero's Wit equivalent",need:419,owner:'yelan',group:'character',source:'Character EXP'});
-  put('yelan_mora',{name:'Mora',need:7049500,step:100000,owner:'yelan',group:'character',source:'Lv.90 + 10/10/10 talents'});
-  put('yelan_starconch',{name:'Starconch',need:168,owner:'yelan',group:'character',source:'Liyue coast'});
-  put('yelan_boss',{name:'Runic Fang',need:46,owner:'yelan',group:'character',source:'Ruin Serpent'});
-  put('yelan_gem1',{name:'Varunada Lazurite Sliver',need:1,owner:'yelan',group:'character',source:'Hydro bosses'});
-  put('yelan_gem2',{name:'Varunada Lazurite Fragment',need:9,owner:'yelan',group:'character',source:'Hydro bosses'});
-  put('yelan_gem3',{name:'Varunada Lazurite Chunk',need:9,owner:'yelan',group:'character',source:'Hydro bosses'});
-  put('yelan_gem',{name:'Varunada Lazurite Gemstone',need:6,owner:'yelan',group:'character',source:'Hydro bosses'});
-  put('yelan_insig1',{name:"Recruit's Insignia",need:36,owner:'yelan',group:'character',source:'Fatui • ascension + talents'});
-  put('yelan_insig2',{name:"Sergeant's Insignia",need:96,owner:'yelan',group:'character',source:'Fatui • ascension + talents'});
-  put('yelan_insig3',{name:"Lieutenant's Insignia",need:129,owner:'yelan',group:'character',source:'Fatui • ascension + talents'});
-  put('yelan_prosperity1',{name:'Teachings of Prosperity',need:9,owner:'yelan',group:'talents',source:'Taishan Mansion',days:[1,4,0],domain:true});
-  put('yelan_prosperity2',{name:'Guide to Prosperity',need:63,owner:'yelan',group:'talents',source:'Taishan Mansion',days:[1,4,0],domain:true});
-  put('yelan_prosperity',{name:'Philosophies of Prosperity',need:114,owner:'yelan',group:'talents',source:'Taishan Mansion',days:[1,4,0],domain:true});
-  put('yelan_gilded',{name:'Gilded Scale',need:18,owner:'yelan',group:'talents',source:'Azhdaha • weekly boss'});
-  put('yelan_crown',{name:'Crown of Insight',need:3,owner:'yelan',group:'talents',source:'10/10/10 talents'});
-  put('aqua_mora',{name:'Weapon Mora',need:1132000,step:100000,owner:'yelan',group:'weapon',source:'Aqua Simulacra Lv.1→90'});
-  put('aqua_ore',{name:'Mystic Enhancement Ore',need:907,owner:'yelan',group:'weapon',source:'Aqua Simulacra Lv.1→90'});
-  put('aqua_sands',{name:'Luminous Sands from Guyun',need:5,owner:'yelan',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[1,4,0],domain:true});
-  put('aqua_stone',{name:'Lustrous Stone from Guyun',need:14,owner:'yelan',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[1,4,0],domain:true});
-  put('aqua_relic',{name:'Relic from Guyun',need:14,owner:'yelan',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[1,4,0],domain:true});
-  put('aqua_body',{name:'Divine Body from Guyun',need:6,owner:'yelan',group:'weapon',source:'Hidden Palace of Lianshan Formula',days:[1,4,0],domain:true});
-  put('aqua_stat1',{name:'Gloomy Statuette',need:23,owner:'yelan',group:'weapon',source:'The Black Serpents'});
-  put('aqua_stat2',{name:'Dark Statuette',need:27,owner:'yelan',group:'weapon',source:'The Black Serpents'});
-  put('yelan_statuette',{name:'Deathly Statuette',need:41,owner:'yelan',group:'weapon',source:'The Black Serpents'});
-  put('aqua_spec1',{name:'Spectral Husk',need:15,owner:'yelan',group:'weapon',source:'Specters'});
-  put('aqua_spec2',{name:'Spectral Heart',need:23,owner:'yelan',group:'weapon',source:'Specters'});
-  put('aqua_spec3',{name:'Spectral Nucleus',need:27,owner:'yelan',group:'weapon',source:'Specters'});
-  setGroups('yelan',
-    ['yelan_wit','yelan_mora','yelan_starconch','yelan_boss','yelan_gem1','yelan_gem2','yelan_gem3','yelan_gem','yelan_insig1','yelan_insig2','yelan_insig3'],
-    ['yelan_prosperity1','yelan_prosperity2','yelan_prosperity','yelan_gilded','yelan_crown'],
-    ['aqua_mora','aqua_ore','aqua_sands','aqua_stone','aqua_relic','aqua_body','aqua_stat1','aqua_stat2','yelan_statuette','aqua_spec1','aqua_spec2','aqua_spec3']
-  );
+  {id:'mona_talent',owner:'Mona',title:'Resistance talent books',kind:'domain',cost:20,days:[2,5,0],source:'Forsaken Rift',remaining:'Philosophies of Resistance ×38',priority:95},
+  {id:'mona_boss',owner:'Mona',title:'Oceanid',kind:'boss',cost:40,source:'Rhodeia of Loch / Oceanid',remaining:'Cleansing Heart ×30 · Varunada Lazurite Gemstone ×2',priority:82},
+  {id:'ttds',owner:'Mona',title:'Thrilling Tales ascension',kind:'domain',cost:20,days:[2,5,0],source:'Cecilia Garden',remaining:"Boreal Wolf's Cracked Tooth ×3 · Broken Fang ×6 · Nostalgia ×3",priority:92},
 
-  // NICOLE • Lv.1→90 + Skill/Burst 10/10 + Angelos' Heptades Lv.1→90
-  put('nicole_wit',{name:"Hero's Wit equivalent",need:419,owner:'nicole',group:'character',source:'Character EXP'});
-  put('nicole_mora',{name:'Mora',need:5397000,step:100000,owner:'nicole',group:'character',source:'Lv.90 + Skill/Burst Lv.10'});
-  put('nicole_pine',{name:'Pine Amber',need:168,owner:'nicole',group:'character',source:'Nod-Krai local specialty'});
-  put('nicole_boss',{name:'Remnant of the Dreadwing',need:46,owner:'nicole',group:'character',source:'Lord of the Hidden Depths'});
-  put('nicole_agate1',{name:'Agnidus Agate Sliver',need:1,owner:'nicole',group:'character',source:'Pyro bosses'});
-  put('nicole_agate2',{name:'Agnidus Agate Fragment',need:9,owner:'nicole',group:'character',source:'Pyro bosses'});
-  put('nicole_agate3',{name:'Agnidus Agate Chunk',need:9,owner:'nicole',group:'character',source:'Pyro bosses'});
-  put('nicole_gem',{name:'Agnidus Agate Gemstone',need:6,owner:'nicole',group:'character',source:'Pyro bosses'});
-  put('nicole_warrant1',{name:'Tattered Warrant',need:30,owner:'nicole',group:'character',source:'Fatui Oprichniki • ascension + Skill/Burst'});
-  put('nicole_warrant2',{name:'Immaculate Warrant',need:74,owner:'nicole',group:'character',source:'Fatui Oprichniki • ascension + Skill/Burst'});
-  put('nicole_warrant3',{name:'Frost-Etched Warrant',need:98,owner:'nicole',group:'character',source:'Fatui Oprichniki • ascension + Skill/Burst'});
-  put('nicole_elysium1',{name:'Teachings of Elysium',need:6,owner:'nicole',group:'talents',source:'Lightless Capital',days:[2,5,0],domain:true});
-  put('nicole_elysium2',{name:'Guide to Elysium',need:42,owner:'nicole',group:'talents',source:'Lightless Capital',days:[2,5,0],domain:true});
-  put('nicole_elysium',{name:'Philosophies of Elysium',need:76,owner:'nicole',group:'talents',source:'Lightless Capital',days:[2,5,0],domain:true});
-  put('nicole_counterfeit',{name:'Counterfeit Resin',need:12,owner:'nicole',group:'talents',source:'Il Dottore • weekly boss'});
-  put('nicole_crown',{name:'Crown of Insight',need:2,owner:'nicole',group:'talents',source:'Skill + Burst Lv.10'});
-  put('angel_mora',{name:'Weapon Mora',need:1132000,step:100000,owner:'nicole',group:'weapon',source:"Angelos' Heptades Lv.1→90"});
-  put('angel_ore',{name:'Mystic Enhancement Ore',need:907,owner:'nicole',group:'weapon',source:"Angelos' Heptades Lv.1→90"});
-  put('angel_art1',{name:'Artful Device Fragment',need:5,owner:'nicole',group:'weapon',source:'Lost Mooncourt',days:[1,4,0],domain:true});
-  put('angel_art2',{name:'Artful Device Replica',need:14,owner:'nicole',group:'weapon',source:'Lost Mooncourt',days:[1,4,0],domain:true});
-  put('angel_art3',{name:'Artful Device Inheritance',need:14,owner:'nicole',group:'weapon',source:'Lost Mooncourt',days:[1,4,0],domain:true});
-  put('angel_art4',{name:'Artful Device Wish',need:6,owner:'nicole',group:'weapon',source:'Lost Mooncourt',days:[1,4,0],domain:true});
-  put('angel_hilt1',{name:'Faded Flaming Hilt',need:23,owner:'nicole',group:'weapon',source:'Domain Keepers'});
-  put('angel_hilt2',{name:'Fractured Flaming Hilt',need:27,owner:'nicole',group:'weapon',source:'Domain Keepers'});
-  put('angel_hilt3',{name:'Jeweled Flaming Hilt',need:41,owner:'nicole',group:'weapon',source:'Domain Keepers'});
-  put('angel_drive1',{name:'Broken Drive Shaft',need:15,owner:'nicole',group:'weapon',source:'Landcruisers'});
-  put('angel_drive2',{name:'Reinforced Drive Shaft',need:23,owner:'nicole',group:'weapon',source:'Landcruisers'});
-  put('angel_drive3',{name:'Precision Drive Shaft',need:27,owner:'nicole',group:'weapon',source:'Landcruisers'});
-  setGroups('nicole',
-    ['nicole_wit','nicole_mora','nicole_pine','nicole_boss','nicole_agate1','nicole_agate2','nicole_agate3','nicole_gem','nicole_warrant1','nicole_warrant2','nicole_warrant3'],
-    ['nicole_elysium1','nicole_elysium2','nicole_elysium','nicole_counterfeit','nicole_crown'],
-    ['angel_mora','angel_ore','angel_art1','angel_art2','angel_art3','angel_art4','angel_hilt1','angel_hilt2','angel_hilt3','angel_drive1','angel_drive2','angel_drive3']
-  );
+  {id:'nicole_weekly',owner:'Nicole',title:'Il Dottore weekly drop',kind:'weekly',cost:30,source:'Il Dottore',remaining:'Counterfeit Resin ×12',priority:100},
+  {id:'nicole_talent',owner:'Nicole',title:'Elysium talent books',kind:'domain',cost:20,days:[2,5,0],source:'Lightless Capital',remaining:'Philosophies of Elysium ×69',priority:95},
+  {id:'nicole_boss',owner:'Nicole',title:'Whisperer of Nightmares',kind:'boss',cost:40,source:'Lord of the Hidden Depths',remaining:'Remnant of the Dreadwing ×46 · Agnidus Agate Gemstone ×1',priority:82},
+  {id:'angelos',owner:'Nicole',title:"Angelos' Heptades ascension",kind:'domain',cost:20,days:[1,4,0],source:'Lost Mooncourt',remaining:'Artful Device Fragment ×2 · Replica ×14 · Inheritance ×14 · Wish ×6',priority:94},
 
-  // CITLALI • Lv.1→90 + Skill/Burst 10/10 + Starcaller's Watch Lv.1→90
-  put('citlali_wit',{name:"Hero's Wit equivalent",need:419,owner:'citlali',group:'character',source:'Character EXP'});
-  put('citlali_mora',{name:'Mora',need:5397000,step:100000,owner:'citlali',group:'character',source:'Lv.90 + Skill/Burst Lv.10'});
-  put('citlali_berry',{name:'Quenepa Berry',need:168,owner:'citlali',group:'character',source:'Natlan local specialty'});
-  put('citlali_boss',{name:'Talisman of the Enigmatic Land',need:46,owner:'citlali',group:'character',source:'Wayward Hermetic Spiritspeaker'});
-  put('citlali_jade1',{name:'Shivada Jade Sliver',need:1,owner:'citlali',group:'character',source:'Cryo bosses'});
-  put('citlali_jade2',{name:'Shivada Jade Fragment',need:9,owner:'citlali',group:'character',source:'Cryo bosses'});
-  put('citlali_jade3',{name:'Shivada Jade Chunk',need:9,owner:'citlali',group:'character',source:'Cryo bosses'});
-  put('citlali_gem',{name:'Shivada Jade Gemstone',need:6,owner:'citlali',group:'character',source:'Cryo bosses'});
-  put('citlali_fang1',{name:'Juvenile Fang',need:30,owner:'citlali',group:'character',source:'Natlan Saurians • ascension + Skill/Burst'});
-  put('citlali_fang2',{name:'Seasoned Fang',need:74,owner:'citlali',group:'character',source:'Natlan Saurians • ascension + Skill/Burst'});
-  put('citlali_fang3',{name:"Tyrant's Fang",need:98,owner:'citlali',group:'character',source:'Natlan Saurians • ascension + Skill/Burst'});
-  put('citlali_kindling1',{name:'Teachings of Kindling',need:6,owner:'citlali',group:'talents',source:'Blazing Ruins',days:[2,5,0],domain:true});
-  put('citlali_kindling2',{name:'Guide to Kindling',need:42,owner:'citlali',group:'talents',source:'Blazing Ruins',days:[2,5,0],domain:true});
-  put('citlali_kindling',{name:'Philosophies of Kindling',need:76,owner:'citlali',group:'talents',source:'Blazing Ruins',days:[2,5,0],domain:true});
-  put('citlali_denial',{name:'Denial and Judgment',need:12,owner:'citlali',group:'talents',source:'The Knave • weekly boss'});
-  put('citlali_crown',{name:'Crown of Insight',need:2,owner:'citlali',group:'talents',source:'Skill + Burst Lv.10'});
-  put('star_mora',{name:'Weapon Mora',need:1132000,step:100000,owner:'citlali',group:'weapon',source:"Starcaller's Watch Lv.1→90"});
-  put('star_ore',{name:'Mystic Enhancement Ore',need:907,owner:'citlali',group:'weapon',source:"Starcaller's Watch Lv.1→90"});
-  put('star_decadence',{name:'Delirious Decadence of the Sacred Lord',need:5,owner:'citlali',group:'weapon',source:'Ancient Watchtower',days:[2,5,0],domain:true});
-  put('star_desolation',{name:'Delirious Desolation of the Sacred Lord',need:14,owner:'citlali',group:'weapon',source:'Ancient Watchtower',days:[2,5,0],domain:true});
-  put('star_demeanor',{name:'Delirious Demeanor of the Sacred Lord',need:14,owner:'citlali',group:'weapon',source:'Ancient Watchtower',days:[2,5,0],domain:true});
-  put('star_divinity',{name:'Delirious Divinity of the Sacred Lord',need:6,owner:'citlali',group:'weapon',source:'Ancient Watchtower',days:[2,5,0],domain:true});
-  put('star_will1',{name:'Shard of a Shattered Will',need:23,owner:'citlali',group:'weapon',source:'Wayob Manifestations'});
-  put('star_will2',{name:'Locus of a Clear Will',need:27,owner:'citlali',group:'weapon',source:'Wayob Manifestations'});
-  put('star_will3',{name:'Sigil of a Striding Will',need:41,owner:'citlali',group:'weapon',source:'Wayob Manifestations'});
-  put('star_whistle1',{name:"Sentry's Wooden Whistle",need:15,owner:'citlali',group:'weapon',source:'Sauroform Tribal Warriors'});
-  put('star_whistle2',{name:"Warrior's Metal Whistle",need:23,owner:'citlali',group:'weapon',source:'Sauroform Tribal Warriors'});
-  put('star_whistle3',{name:"Saurian-Crowned Warrior's Golden Whistle",need:27,owner:'citlali',group:'weapon',source:'Sauroform Tribal Warriors'});
-  setGroups('citlali',
-    ['citlali_wit','citlali_mora','citlali_berry','citlali_boss','citlali_jade1','citlali_jade2','citlali_jade3','citlali_gem','citlali_fang1','citlali_fang2','citlali_fang3'],
-    ['citlali_kindling1','citlali_kindling2','citlali_kindling','citlali_denial','citlali_crown'],
-    ['star_mora','star_ore','star_decadence','star_desolation','star_demeanor','star_divinity','star_will1','star_will2','star_will3','star_whistle1','star_whistle2','star_whistle3']
-  );
+  {id:'art_hutao',owner:'Hu Tao',title:'Crimson Witch artifacts',kind:'artifact',cost:20,source:'Hidden Palace of Zhou Formula',remaining:'4pc Crimson Witch of Flames',priority:10},
+  {id:'art_yelan',owner:'Yelan',title:'Emblem artifacts',kind:'artifact',cost:20,source:'Momiji-Dyed Court',remaining:'4pc Emblem of Severed Fate',priority:10},
+  {id:'art_mona',owner:'Mona',title:'Celestial Gift artifacts',kind:'artifact',cost:20,source:'Thorny Crown of the Mountain Wind',remaining:'4pc Celestial Gift for this Hu Tao team',priority:10},
+  {id:'art_nicole',owner:'Nicole',title:'Scroll artifacts',kind:'artifact',cost:20,source:'Sanctum of Rainbow Spirits',remaining:'4pc Scroll of the Hero of Cinder City for this Hu Tao team',priority:10}
+];
 
-  // Small migration from the old partial counters where it maps cleanly.
-  const migrateMax = (to, from) => { if ((+s.materials[to]||0) === 0 && (+s.materials[from]||0) > 0) s.materials[to] = +s.materials[from] || 0; };
-  migrateMax('nicole_warrant3','nicole_warrant_char');
-  migrateMax('citlali_fang3','citlali_fang_char');
+const TEAM=[
+  {name:'Hu Tao',element:'Pyro',role:'On-field DPS',weapon:'Staff of Homa',artifact:'4pc Crimson Witch of Flames',stats:'EM or HP% / Pyro DMG / CRIT',note:'Character and talents are already finished. Resin goal is Homa, then artifacts.'},
+  {name:'Yelan',element:'Hydro',role:'Off-field Hydro',weapon:'Aqua Simulacra',artifact:'4pc Emblem of Severed Fate',stats:'ER or HP% / Hydro DMG / CRIT',note:'Target from HoYoLAB: Lv.1 → 90 and talents 1/1/1 → 10/10/10.'},
+  {name:'Mona',element:'Hydro',role:'Burst buffer',weapon:'Thrilling Tales of Dragon Slayers',artifact:'4pc Celestial Gift',stats:'ER / Hydro DMG / CRIT or utility',note:'Current target: Lv.70 → 90, Skill 1 → 5, Burst 4 → 10, TTDS Lv.50 → 90.'},
+  {name:'Nicole',element:'Pyro',role:'ATK buffer + shield',weapon:"Angelos' Heptades",artifact:'4pc Scroll of the Hero of Cinder City',stats:'ATK% / ATK% / ATK%',note:'Current target: Lv.1 → 90, Skill + Burst → 10. Normal Attack stays Lv.1.'}
+];
 
-  save();
-})();
+const PRIMO_SOURCES=[
+  ['Daily Commissions','Daily','The boring little 60-primo faucet.'],
+  ['Limited-time events','Version','Do event pages before they evaporate.'],
+  ['Archon / Story / World quests','Permanent','Quest rewards, achievements and unlocked areas stack up.'],
+  ['Exploration + chests','Permanent','Chests, oculi, offering systems, puzzles and region progress.'],
+  ['Achievements','Permanent','Small individually, suspiciously large as a pile.'],
+  ['Spiral Abyss','Recurring','Clear the current cycle as far as comfortably possible.'],
+  ['Imaginarium Theater','Recurring','Recurring endgame rewards.'],
+  ['Stygian Onslaught','Recurring','Check the current cycle and difficulty rewards.'],
+  ['Character Test Runs','Banner','Free primos whenever eligible trials are live.'],
+  ['Redeem codes','Free','ChatGPT checks this for you every day at 12:00.'],
+  ['Maintenance / update mail','Version','Free mail after eligible updates and maintenance.'],
+  ['HoYoLAB check-in','Monthly','Occasional primogems among the check-in rewards.'],
+  ['Serenitea Pot gift sets','Permanent','Companion furnishing sets can pay out primogems.']
+];
+
+function defaultState(){return{
+  resin:160,
+  completedGoals:{},
+  dayDone:{},
+  wishes:{primos:0,fates:0,charPity:0,charGuaranteed:false,weaponPity:0,weaponFate:false},
+  weekly:{weekKey:'',transformer:false,trap:false,teapot:false,azhdaha:false,dottore:false,third:false},
+  weeklyBossCount:0
+}}
+function load(){try{return Object.assign(defaultState(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return defaultState()}}
+let S=load();
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function clamp(n,a,b){n=Number(n)||0;return Math.max(a,Math.min(b,n))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function dateKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function isoWeekKey(d=new Date()){
+  const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-day);
+  const y=new Date(Date.UTC(x.getUTCFullYear(),0,1));
+  return x.getUTCFullYear()+'-W'+String(Math.ceil((((x-y)/86400000)+1)/7)).padStart(2,'0')
+}
+function ensureWeek(){const k=isoWeekKey();if(S.weekly.weekKey!==k){S.weekly={weekKey:k,transformer:false,trap:false,teapot:false,azhdaha:false,dottore:false,third:false};S.weeklyBossCount=0;save()}}
+ensureWeek();
+
+function goalDone(id){return !!S.completedGoals[id]}
+function available(g,day){if(g.kind==='domain')return g.days.includes(day);return true}
+function unfinished(kind=null){return RESIN_GOALS.filter(g=>!goalDone(g.id)&&(!kind||g.kind===kind))}
+function doneToday(id){return !!(S.dayDone[dateKey()]||{})[id]}
+function weeklyDoneForGoal(g){
+  if(g.id==='yelan_weekly') return !!S.weekly.azhdaha;
+  if(g.id==='nicole_weekly') return !!S.weekly.dottore;
+  return false;
+}
+function setDoneToday(id,v){
+  if(v && id==='yelan_weekly') S.weekly.azhdaha=true;
+  else if(v && id==='nicole_weekly') S.weekly.dottore=true;
+  else {
+    S.dayDone[dateKey()]=S.dayDone[dateKey()]||{};
+    S.dayDone[dateKey()][id]=v;
+  }
+  save();renderToday();renderWeekly();
+}
+function tomorrowDomainGoals(){const d=(new Date().getDay()+1)%7;return RESIN_GOALS.filter(g=>!goalDone(g.id)&&g.kind==='domain'&&g.days.includes(d))}
+function todayQueue(){
+  const day=new Date().getDay();
+  return RESIN_GOALS
+    .filter(g=>!goalDone(g.id)&&g.kind!=='artifact'&&available(g,day)&&!doneToday(g.id)&&!weeklyDoneForGoal(g))
+    .sort((a,b)=>b.priority-a.priority || a.owner.localeCompare(b.owner));
+}
+function artifactQueue(){return RESIN_GOALS.filter(g=>!goalDone(g.id)&&g.kind==='artifact'&&!doneToday(g.id))}
