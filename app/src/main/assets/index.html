@@ -6,17 +6,41 @@
 <meta name="theme-color" content="#090b12">
 <title>L.U.N.A.R.</title>
 <style>
-:root{color-scheme:dark;--bg:#090b12;--panel:#111520;--panel2:#0d111a;--line:#262d3d;--text:#f4f6ff;--muted:#9299ad;--accent:#9ca7ff;--good:#76e6aa;--warn:#ffd27c;--pyro:#ff876d;--hydro:#6dc9ff}
-*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font:14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}button,input{font:inherit;color:inherit}button{border:1px solid #30384b;background:#0d111a;border-radius:12px;min-height:42px;padding:8px 10px;touch-action:manipulation}button:active{transform:scale(.98)}input[type=number]{width:100%;min-height:42px;background:#090c13;border:1px solid #343c50;border-radius:11px;padding:9px 10px;outline:none}input[type=checkbox]{width:21px;height:21px;accent-color:#8c9aff;flex:0 0 auto}a{color:#b9c1ff;text-decoration:none}.app{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom)}header{flex:0 0 auto;padding:10px 2px 8px;background:var(--bg);z-index:5}h1{font-size:21px;letter-spacing:.22em;margin:0}.sub{font-size:10px;letter-spacing:.16em;color:var(--muted);margin-top:2px}.nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.nav button{font-size:10px;padding:6px 4px;color:var(--muted);border-color:#242b3b}.nav button.on{color:white;background:#252d49;border-color:#6977c7}.viewport{flex:1;min-height:0}.page{display:none;height:100%;overflow-y:auto;padding:4px 1px 28px;overscroll-behavior:contain}.page.on{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;margin:10px 0}.hero{background:linear-gradient(145deg,#151a29,#10131d)}.eyebrow{font-size:10px;color:var(--muted);letter-spacing:.13em;text-transform:uppercase}.title{font-size:20px;font-weight:850;margin:3px 0}.muted{color:var(--muted)}.good{color:var(--good)}.warn{color:var(--warn)}.section-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:15px 2px 5px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric{background:var(--panel2);border:1px solid #252c3c;border-radius:14px;padding:11px;min-width:0}.metric b{display:block;font-size:20px;margin-top:3px;overflow-wrap:anywhere}.metric small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.bar{height:7px;background:#080a10;border-radius:99px;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#9ca7ff,#6de3ff);width:0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid #222938}.row:first-child{border-top:0}.left{min-width:0;flex:1}.left b{display:block;font-size:13px}.left small{display:block;color:var(--muted);font-size:10px;margin-top:2px;line-height:1.35}.pill{display:inline-flex;align-items:center;gap:4px;border:1px solid #323a4d;background:#0c1018;border-radius:99px;padding:5px 8px;font-size:10px;color:var(--muted);white-space:nowrap}.pill.pyro{color:var(--pyro)}.pill.hydro{color:var(--hydro)}.task{background:#0d1119;border:1px solid #242b3a;border-radius:14px;padding:12px;margin:8px 0}.task.primary{border-color:#6672c5;background:#12172a}.taskhead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.taskhead b{font-size:13px}.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.tag{font-size:9px;border-radius:99px;padding:4px 7px;background:#171c29;color:#adb5ca;border:1px solid #293145}.action{width:100%;margin-top:10px;background:#202844;border-color:#5968b3;font-weight:750}.action.secondary{background:#101520;border-color:#30384b;color:#d8dced}.action.goodbtn{background:#102219;border-color:#2f6c4a;color:#a9f3c8}.savebox{text-align:center;padding:26px 14px}.savebox b{font-size:22px;color:var(--warn);display:block;margin-bottom:6px}.inline-input{display:grid;grid-template-columns:1fr 100px;gap:10px;align-items:center;padding:9px 0;border-top:1px solid #222938}.inline-input:first-child{border-top:0}.inline-input label{font-size:12px}.checkrow{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-top:1px solid #222938}.checkrow:first-child{border-top:0}.checkrow label{flex:1}.checkrow label b{display:block;font-size:12px}.checkrow label small{display:block;color:var(--muted);font-size:10px;margin-top:2px;line-height:1.35}.goal-complete{opacity:.55}.goal-complete b{text-decoration:line-through}.roster{display:grid;grid-template-columns:1fr;gap:8px}.charcard{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:13px}.charhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.charhead h3{margin:0;font-size:17px}.charline{font-size:11px;color:#d7dced;padding-top:7px;margin-top:7px;border-top:1px solid #222938;line-height:1.45}.charline b{color:#fff}.targetchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.targetchip{font-size:10px;border:1px solid #323a4d;background:#0d1119;border-radius:99px;padding:6px 8px}.linkbtn{display:block;text-align:center;border:1px solid #39435f;background:#11182a;border-radius:12px;padding:11px;margin-top:8px}.note{font-size:10px;color:var(--muted);line-height:1.45;margin-top:8px}@media(max-width:380px){.card{padding:12px}.title{font-size:18px}.nav button{font-size:9px}.inline-input{grid-template-columns:1fr 88px}}
+:root{color-scheme:dark;--bg:#090b12;--panel:#111520;--line:#272e3e;--text:#f4f6ff;--muted:#969db0;--accent:#9ca7ff;--good:#76e6aa;--warn:#ffd27c}*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body{display:flex;justify-content:center}.app{width:100%;max-width:480px;min-height:100%;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}header{padding:28px 4px 20px}h1{margin:0;font-size:25px;letter-spacing:.24em}.sub{margin-top:5px;color:var(--muted);font-size:10px;letter-spacing:.15em}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0}.eyebrow{color:var(--muted);font-size:10px;letter-spacing:.15em;text-transform:uppercase}.big{font-size:28px;font-weight:850;margin-top:5px}.muted{color:var(--muted);font-size:11px;margin-top:4px}.bar{height:9px;background:#080a10;border-radius:99px;overflow:hidden;margin:14px 0 6px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9ca7ff,#6de3ff);transition:width .25s}.percent{font-size:11px;color:var(--muted);text-align:right}.goal{font-size:20px;font-weight:800;margin-top:5px}input{width:100%;height:50px;margin-top:10px;border:1px solid #394158;border-radius:13px;background:#090c13;color:white;padding:0 13px;font-size:18px;outline:none}button{width:100%;min-height:46px;margin-top:10px;border:1px solid #394158;border-radius:13px;background:#171d2d;color:white;font-weight:750}button:active{transform:scale(.98)}.good{color:var(--good)}.warn{color:var(--warn)}.split{display:grid;grid-template-columns:1fr 1fr;gap:9px}.split button{margin-top:0}.footer{color:#666d80;font-size:10px;text-align:center;margin:25px 0}.danger{background:#171218;border-color:#3d2b36;color:#d9aabb}
 </style>
 </head>
 <body>
-<div class="app">
-<header><h1>L.U.N.A.R.</h1><div class="sub">GENSHIN PLANNER · III</div>
-<nav class="nav" id="nav"><button class="on" data-page="today">TODAY</button><button data-page="plan">RESIN PLAN</button><button data-page="wishes">WISHES</button><button data-page="primos">PRIMOS</button><button data-page="weekly">WEEKLY</button><button data-page="team">TEAM</button></nav></header>
-<div class="viewport"><section class="page on" id="today"></section><section class="page" id="plan"></section><section class="page" id="wishes"></section><section class="page" id="primos"></section><section class="page" id="weekly"></section><section class="page" id="team"></section></div>
-</div>
-<script src="materials_full.js"></script>
-<script src="planning_pack.js"></script>
+<main class="app">
+<header><h1>L.U.N.A.R.</h1><div class="sub">PRIMOGEM SAVING TRACKER</div></header>
+<section class="card">
+  <div class="eyebrow">Weekly goal</div>
+  <div class="goal">1,600 Primogems</div>
+  <div class="big" id="weeklyValue">0 / 1,600</div>
+  <div class="bar"><i id="weeklyBar"></i></div>
+  <div class="percent" id="weeklyPct">0%</div>
+  <div class="muted" id="weeklyStatus">1,600 primogems to go</div>
+  <input id="weeklyInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Primogems earned this week">
+  <div class="split"><button id="addWeekly">+160</button><button id="resetWeekly">Reset week</button></div>
+</section>
+<section class="card">
+  <div class="eyebrow">Long-term goal</div>
+  <div class="goal">200,000 Primogems</div>
+  <div class="big" id="primoValue">0</div>
+  <div class="bar"><i id="totalBar"></i></div>
+  <div class="percent" id="totalPct">0%</div>
+  <div class="muted" id="totalStatus">200,000 primogems to go</div>
+</section>
+<section class="card">
+  <div class="eyebrow">Current primogems</div>
+  <div class="muted">Type the amount you have right now.</div>
+  <input id="currentInput" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 12540">
+</section>
+<section class="card">
+  <div class="eyebrow">Reset</div>
+  <button class="danger" id="clearAll">Clear L.U.N.A.R. data</button>
+</section>
+<div class="footer">1 wish = 160 Primogems · data stays on this device</div>
+</main>
+<script src="app.js"></script>
 </body>
 </html>
