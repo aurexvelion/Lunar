@@ -25,11 +25,12 @@
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       return {
         current: clamp(saved.current),
+        initialized: saved.initialized === true,
         weekKey: typeof saved.weekKey === 'string' ? saved.weekKey : '',
         weekStart: clamp(saved.weekStart)
       };
     } catch {
-      return { current: 0, weekKey: '', weekStart: 0 };
+      return { current: 0, initialized: false, weekKey: '', weekStart: 0 };
     }
   }
 
@@ -40,6 +41,8 @@
   }
 
   function ensureCurrentWeek() {
+    if (!state.initialized) return;
+
     const key = getMondayKey();
     if (state.weekKey !== key) {
       state.weekKey = key;
@@ -51,11 +54,14 @@
   function render() {
     ensureCurrentWeek();
 
-    const weeklyEarned = Math.max(0, state.current - state.weekStart);
+    const weeklyEarned = state.initialized
+      ? Math.max(0, state.current - state.weekStart)
+      : 0;
+
     const weeklyPct = percent(weeklyEarned, WEEKLY_GOAL);
     const grandPct = percent(state.current, GRAND_GOAL);
 
-    $('currentInput').value = state.current || '';
+    $('currentInput').value = state.initialized ? state.current : '';
 
     $('weeklyValue').textContent = fmt(weeklyEarned);
     $('weeklyBar').style.width = weeklyPct + '%';
@@ -73,29 +79,40 @@
       : fmt(GRAND_GOAL - state.current) + ' left';
     $('grandLeft').classList.toggle('complete', state.current >= GRAND_GOAL);
 
-    $('weekNote').textContent =
-      'Weekly progress is measured from your saved balance of ' +
-      fmt(state.weekStart) +
-      ' at the start of this tracked week.';
+    $('weekNote').textContent = state.initialized
+      ? 'Weekly progress is measured from your saved balance of ' +
+        fmt(state.weekStart) +
+        ' at the start of this tracked week.'
+      : 'Enter your current Primogem balance to begin.';
   }
 
   $('currentInput').addEventListener('input', event => {
-    state.current = clamp(event.target.value);
+    const next = clamp(event.target.value);
+
+    if (!state.initialized) {
+      state.initialized = true;
+      state.current = next;
+      state.weekKey = getMondayKey();
+      state.weekStart = next;
+    } else {
+      state.current = next;
+    }
+
     save();
     render();
   });
 
   $('currentInput').addEventListener('blur', () => {
-    $('currentInput').value = state.current || '';
+    $('currentInput').value = state.initialized ? state.current : '';
   });
 
   $('resetWeek').addEventListener('click', () => {
+    if (!state.initialized) return;
     state.weekKey = getMondayKey();
     state.weekStart = state.current;
     save();
     render();
   });
 
-  ensureCurrentWeek();
   render();
 })();
