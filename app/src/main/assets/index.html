@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#090b12">
 <title>L.U.N.A.R.</title>
 <style>
-:root{color-scheme:dark;--bg:#090b12;--panel:#111520;--line:#272e3e;--text:#f4f6ff;--muted:#969db0;--accent:#9ca7ff;--good:#76e6aa;--warn:#ffd27c}*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body{display:flex;justify-content:center}.app{width:100%;max-width:480px;min-height:100%;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}header{padding:28px 4px 20px}h1{margin:0;font-size:25px;letter-spacing:.24em}.sub{margin-top:5px;color:var(--muted);font-size:10px;letter-spacing:.15em}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0}.eyebrow{color:var(--muted);font-size:10px;letter-spacing:.15em;text-transform:uppercase}.big{font-size:28px;font-weight:850;margin-top:5px}.muted{color:var(--muted);font-size:11px;margin-top:4px}.bar{height:9px;background:#080a10;border-radius:99px;overflow:hidden;margin:14px 0 6px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9ca7ff,#6de3ff);transition:width .25s}.percent{font-size:11px;color:var(--muted);text-align:right}.goal{font-size:20px;font-weight:800;margin-top:5px}input{width:100%;height:50px;margin-top:10px;border:1px solid #394158;border-radius:13px;background:#090c13;color:white;padding:0 13px;font-size:18px;outline:none}button{width:100%;min-height:46px;margin-top:10px;border:1px solid #394158;border-radius:13px;background:#171d2d;color:white;font-weight:750}button:active{transform:scale(.98)}.good{color:var(--good)}.warn{color:var(--warn)}.split{display:grid;grid-template-columns:1fr 1fr;gap:9px}.split button{margin-top:0}.footer{color:#666d80;font-size:10px;text-align:center;margin:25px 0}.danger{background:#171218;border-color:#3d2b36;color:#d9aabb}
+:root{color-scheme:dark;--bg:#090b12;--panel:#111520;--line:#272e3e;--text:#f4f6ff;--muted:#969db0;--accent:#9ca7ff;--good:#76e6aa}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body{display:flex;justify-content:center}.app{width:100%;max-width:480px;min-height:100vh;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}header{padding:30px 4px 22px}h1{margin:0;font-size:26px;letter-spacing:.25em}.sub{margin-top:6px;color:var(--muted);font-size:10px;letter-spacing:.15em}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0}.eyebrow{color:var(--muted);font-size:10px;letter-spacing:.15em;text-transform:uppercase}.goal{font-size:20px;font-weight:800;margin-top:6px}.big{font-size:28px;font-weight:850;margin-top:8px}.muted{color:var(--muted);font-size:11px;margin-top:5px}.bar{height:9px;background:#080a10;border-radius:99px;overflow:hidden;margin:14px 0 6px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9ca7ff,#6de3ff);transition:width .25s}.percent{font-size:11px;color:var(--muted);text-align:right}input{width:100%;height:50px;margin-top:12px;border:1px solid #394158;border-radius:13px;background:#090c13;color:white;padding:0 13px;font-size:18px;outline:none}input:focus{border-color:var(--accent)}.good{color:var(--good)}.footer{color:#666d80;font-size:10px;text-align:center;margin:24px 0 8px}
 </style>
 </head>
 <body>
@@ -20,10 +20,9 @@
   <div class="percent" id="weeklyPct">0%</div>
   <div class="muted" id="weeklyStatus">1,600 primogems to go</div>
   <input id="weeklyInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Primogems earned this week">
-  <div class="split"><button id="addWeekly">+160</button><button id="resetWeekly">Reset week</button></div>
 </section>
 <section class="card">
-  <div class="eyebrow">Long-term goal</div>
+  <div class="eyebrow">200K savings goal</div>
   <div class="goal">200,000 Primogems</div>
   <div class="big" id="primoValue">0</div>
   <div class="bar"><i id="totalBar"></i></div>
@@ -32,14 +31,10 @@
 </section>
 <section class="card">
   <div class="eyebrow">Current primogems</div>
-  <div class="muted">Type the amount you have right now.</div>
+  <div class="muted">Enter the amount you have right now. This controls your 200K progress.</div>
   <input id="currentInput" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 12540">
 </section>
-<section class="card">
-  <div class="eyebrow">Reset</div>
-  <button class="danger" id="clearAll">Clear L.U.N.A.R. data</button>
-</section>
-<div class="footer">1 wish = 160 Primogems · data stays on this device</div>
+<div class="footer">1 wish = 160 Primogems · saved on this device</div>
 </main>
 <script src="app.js"></script>
 </body>
