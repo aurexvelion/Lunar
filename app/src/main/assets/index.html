@@ -92,15 +92,22 @@ h1{margin:0;font-size:25px;letter-spacing:.36em;padding-left:.36em;font-weight:7
   .value{font-size:22px}
 }
 </style>
+<link rel="stylesheet" href="materials.css">
 </head>
 <body>
 <main class="app">
   <header>
     <div class="moon">☾</div>
     <h1>L.U.N.A.R.</h1>
-    <div class="tag">Primogem saving tracker</div>
+    <div class="tag">Primogems &amp; character materials</div>
   </header>
 
+  <nav class="tabs" aria-label="Tracker sections">
+    <button class="tab active" id="tabPrimos" type="button" aria-selected="true">✦ PRIMOGEMS</button>
+    <button class="tab" id="tabMaterials" type="button" aria-selected="false">◇ MATERIALS</button>
+  </nav>
+
+  <div id="primosView" class="view">
   <section class="card">
     <div class="label">Current Primogems</div>
     <div class="currentRow">
@@ -138,7 +145,56 @@ h1{margin:0;font-size:25px;letter-spacing:.36em;padding-left:.36em;font-weight:7
 
   <div class="note" id="weekNote"></div>
   <button class="reset" id="resetWeek" type="button">Reset weekly starting point</button>
+  </div>
+
+  <div id="materialsView" class="view" hidden>
+    <section class="card materialWelcome" id="characterWelcome">
+      <div class="label">Character Farming</div>
+      <h2>Materials</h2>
+      <p>Make a section for each character. Enter what you need, update what you own, and see what remains.</p>
+      <form id="addCharacterForm" class="matForm">
+        <input id="characterNameInput" class="matInput" type="text" maxlength="60" placeholder="Character name (e.g. Vesna)" aria-label="New character name" autocomplete="off" required>
+        <button class="primaryBtn" type="submit">+ Add character</button>
+      </form>
+    </section>
+    <div id="characterRoster"></div>
+
+    <section id="characterDetails" hidden>
+      <div class="card characterHead">
+        <button id="backToCharacters" class="backButton" type="button">← All characters</button>
+        <div class="label">Material Tracker</div>
+        <h2 id="characterTitle"></h2>
+        <div class="subdued" id="characterSummary"></div>
+        <div class="statsLine">
+          <div class="label">Collection progress</div>
+          <div id="characterPercent" class="summaryPct">0%</div>
+        </div>
+        <div class="bar" id="characterProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <i class="fill" id="characterProgress"></i>
+        </div>
+      </div>
+
+      <section class="card">
+        <div class="label" style="margin-bottom:13px">Add a material</div>
+        <form id="addMaterialForm" class="matForm">
+          <input id="newMaterialName" class="matInput" type="text" maxlength="80" placeholder="Material name" aria-label="Material name" autocomplete="off" required>
+          <div class="twoFields">
+            <label><span class="formLabel">Total needed</span><input id="newMaterialRequired" class="matInput" type="number" min="1" max="999999999" step="1" inputmode="numeric" placeholder="63" required></label>
+            <label><span class="formLabel">Already owned</span><input id="newMaterialOwned" class="matInput" type="number" min="0" max="999999999" step="1" inputmode="numeric" value="0"></label>
+          </div>
+          <button class="primaryBtn" type="submit">+ Add material</button>
+        </form>
+      </section>
+
+      <div class="materialListLabel">
+        <h3>Materials</h3>
+        <span class="materialsCount" id="materialCount">0 total</span>
+      </div>
+      <div id="materialsList"></div>
+    </section>
+  </div>
 </main>
 <script src="app.js"></script>
+<script src="materials.js"></script>
 </body>
 </html>
